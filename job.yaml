@@ -1,0 +1,28 @@
+resources:
+  jobs:
+    New_Job_Apr_06_2026_08_03_AM:
+      name: New Job Apr 06, 2026, 08:03 AM
+      schedule:
+        quartz_cron_expression: 50 0 13 * * ?
+        timezone_id: America/Sao_Paulo
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/juangame39@gmail.com/01_Bronze_Ingestion
+            source: WORKSPACE
+        - task_key: Silver_Transformation
+          depends_on:
+            - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/juangame39@gmail.com/02_Silver_Transformations
+            source: WORKSPACE
+        - task_key: Golde_DataMarts
+          depends_on:
+            - task_key: Silver_Transformation
+          notebook_task:
+            notebook_path: /Workspace/Users/juangame39@gmail.com/01_Bronze_Ingestion
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
